@@ -43,7 +43,7 @@ class CRTColorFilter: CIFilter
     var pixelWidth: CGFloat = 8.0
     var pixelHeight: CGFloat = 12.0
     
-    let crtColorKernel = CIColorKernel(string:
+    let crtColorKernel = CIColorKernel(source:
         "kernel vec4 crtColor(__sample image, float pixelWidth, float pixelHeight) \n" +
         "{ \n" +
         
@@ -64,11 +64,11 @@ class CRTColorFilter: CIFilter
     override var outputImage : CIImage!
     {
         if let inputImage = inputImage,
-            crtColorKernel = crtColorKernel
+            let crtColorKernel = crtColorKernel
         {
             let dod = inputImage.extent
-            let args = [inputImage, pixelWidth, pixelHeight]
-            return crtColorKernel.applyWithExtent(dod, arguments: args)
+            let args = [inputImage, pixelWidth, pixelHeight] as [Any]
+            return crtColorKernel.apply(extent: dod, arguments: args)
         }
         return nil
     }
@@ -78,7 +78,7 @@ class CRTWarpFilter: CIFilter
 {
     var inputImage : CIImage?
     
-    let crtWarpKernel = CIWarpKernel(string:
+    let crtWarpKernel = CIWarpKernel(source:
         "kernel vec2 crtWarp(vec2 extent)" +
             "{" +
             "   vec2 coord = ((destCoord() / extent) - 0.5) * 2.0;" +
@@ -95,18 +95,18 @@ class CRTWarpFilter: CIFilter
     override var outputImage : CIImage!
     {
         if let inputImage = inputImage,
-            crtWarpKernel = crtWarpKernel
+            let crtWarpKernel = crtWarpKernel
         {
             let arguments = [CIVector(x: inputImage.extent.size.width, y: inputImage.extent.size.height)]
             let extent = inputImage.extent.insetBy(dx: -1, dy: -1)
             
-            return crtWarpKernel.applyWithExtent(extent,
+            return crtWarpKernel.apply(extent: extent,
                 roiCallback:
                 {
                     (index, rect) in
                     return rect
                 },
-                inputImage: inputImage,
+                image: inputImage,
                 arguments: arguments)
         }
         return nil

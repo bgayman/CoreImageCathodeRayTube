@@ -12,7 +12,7 @@ class ViewController: UIViewController, CameraCaptureHelperDelegate
 {
     let imageView = ImageView()
     
-    let cameraCaptureHelper = CameraCaptureHelper(cameraPosition: .Back)
+    let cameraCaptureHelper = CameraCaptureHelper(cameraPosition: .back)
     
     let crtFilter = CRTFilter()
     
@@ -31,7 +31,7 @@ class ViewController: UIViewController, CameraCaptureHelperDelegate
     }
     
     
-    func newCameraImage(cameraCaptureHelper: CameraCaptureHelper, image: CIImage)
+    func newCameraImage(_ cameraCaptureHelper: CameraCaptureHelper, image: CIImage)
     {
         crtFilter.inputImage = image
         
